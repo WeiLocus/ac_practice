@@ -1,0 +1,12 @@
+#search-form {
+  display: flex;
+}
+#change-displaymode {
+  cursor: pointer;
+}
+.fa-th:hover {
+  color: blue;
+}
+.fa-bars:hover {
+  color: red;
+}
