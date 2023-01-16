@@ -1,11 +1,4 @@
-<h1 align="center">AC Project</h1>
 
-| Project  | Link |
-| ------------- |:-------------:|
-| My Movie List     | [Demo](https://weilocus.github.io/ac_practice/my-movie-list/)     |
-| Memorizing Game      | [Demo](https://weilocus.github.io/ac_practice/MemorizingGame/)     |
-
----
 # Project Description
 
 ## <font color="#3885c1">_My Movie List_</font>
