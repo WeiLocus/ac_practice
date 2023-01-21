@@ -9,12 +9,15 @@ const dataPanel = document.querySelector('#data-panel')
 const searchForm = document.querySelector('#search-form')
 const searchInput = document.querySelector('#search-input')
 
-renderUserList(favUsers)
+const USER_PER_PAGE = 12
+const paginator = document.querySelector('#paginator')
+
+renderUserList(getUsersByPage(1))
+renderPaginator(favUsers.length)
 
 function renderUserList(data) {
   let htmlContent = ''
   data.forEach((item) => {
-    console.log(item.avatar)
     htmlContent += `
     <div class="col-sm-2">
         <div class="mb-2">
@@ -37,6 +40,50 @@ function renderUserList(data) {
       </div>
     `
     dataPanel.innerHTML = htmlContent
+  })
+}
+
+//渲染分頁數
+function renderPaginator(amount) {
+  // 80 / 12 = 6..8
+  const numberOfPages = Math.ceil(amount / USER_PER_PAGE)
+  let htmlContent = ''
+  //for迭代分頁
+  for (let page = 1; page <= numberOfPages; page++) {
+    htmlContent += `
+    <li class="page-item"><a class="page-link" href="#" data-page=${page}>${page}</a></li>
+    `
+  }
+  paginator.innerHTML = htmlContent
+  markCurrentPage('1') //dataset是字串，所以這裡也要放字串
+}
+
+//建立分頁，一頁12筆資料
+function getUsersByPage(page) {
+  //page 1 : users 0 ~ 11 , page 2 : users 12 ~ 23
+  const startIndex = (page - 1) * USER_PER_PAGE
+  //如果filteredUser陣列裡有東西，就回傳filteredUser，否則就回傳users
+  const dataList = filteredUser.length ? filteredUser : favUsers
+  return dataList.slice(startIndex, startIndex + USER_PER_PAGE)
+}
+
+//建立對paginator的click事件
+paginator.addEventListener('click', function onPaginatorClicked(e) {
+  if (e.target.tagName !== 'A') return
+  const page = Number(e.target.dataset.page)
+  renderUserList(getUsersByPage(page))
+  markCurrentPage(page)
+})
+
+function markCurrentPage(clickPage) {
+  const pages = [...paginator.children]
+  // console.log(pages)
+  pages.forEach((page) => {
+    if (page.firstElementChild.dataset.page === String(clickPage)) {
+      page.classList.add('active')
+    } else {
+      page.classList.remove('active')
+    }
   })
 }
 
@@ -82,14 +129,17 @@ searchForm.addEventListener('submit', function onSearchSubmitted(e) {
   e.preventDefault()
   const keyword = searchInput.value.trim().toLowerCase()
   filteredUser = favUsers.filter(function (user) {
-    if (user.name.toLowerCase().includes(keyword) || user.surname.toLowerCase().includes(keyword)) {
-      return user
-    }
+    const userName = user.name + user.surname
+    console.log(userName)
+    console.log(userName.toLowerCase().includes(keyword))
+    return userName.toLowerCase().includes(keyword)
   })
+  console.log(filteredUser)
   if (filteredUser.length === 0) {
     return alert(`您輸入的關鍵字：${keyword} 沒有符合條件的搜尋結果`)
   }
-  renderUserList(filteredUser)
+  renderUserList(getUsersByPage(1))
+  renderPaginator(filteredUser.length)
 })
 
 

@@ -9,13 +9,17 @@ const modalAddFav = document.querySelector('.modal-footer')
 const searchForm = document.querySelector('#search-form')
 const searchInput = document.querySelector('#search-input')
 
+const USER_PER_PAGE = 12
+const paginator = document.querySelector('#paginator')
 
 //用axios發送get request
 axios.get(INDEX_URL)
 .then((response) => {
   // console.log(response.data.results)
   users.push(...response.data.results)
-  renderUserList(users)
+  // renderUserList(users)
+  renderUserList(getUsersByPage(1))
+  renderPaginator(users.length)
 })
 .catch ((error) => console.log(error))
 
@@ -41,6 +45,50 @@ function renderUserList(data) {
       </div>
     `
     dataPanel.innerHTML = htmlContent
+  })
+}
+
+//渲染分頁數
+function renderPaginator(amount) {
+  // 80 / 12 = 6..8
+  const numberOfPages = Math.ceil( amount / USER_PER_PAGE)
+  let htmlContent = ''
+  //for迭代分頁
+  for (let page = 1; page <= numberOfPages; page++) {
+    htmlContent += `
+    <li class="page-item"><a class="page-link" href="#" data-page=${page}>${page}</a></li>
+    `
+  }
+  paginator.innerHTML = htmlContent
+  markCurrentPage('1') //dataset是字串，所以這裡也要放字串
+}
+
+//建立分頁，一頁12筆資料
+function getUsersByPage(page) { 
+  //page 1 : users 0 ~ 11 , page 2 : users 12 ~ 23
+  const startIndex = (page - 1) * USER_PER_PAGE
+  //如果filteredUser陣列裡有東西，就回傳filteredUser，否則就回傳users
+  const dataList = filteredUser.length ? filteredUser : users
+  return dataList.slice(startIndex ,startIndex + USER_PER_PAGE)
+}
+
+//建立對paginator的click事件
+paginator.addEventListener('click',function onPaginatorClicked(e) {
+  if (e.target.tagName !== 'A') return
+  const page = Number(e.target.dataset.page)
+  renderUserList(getUsersByPage(page))
+  markCurrentPage(page)
+})
+
+function markCurrentPage(clickPage) {
+  const pages = [...paginator.children]
+  // console.log(pages)
+  pages.forEach((page) => {
+    if (page.firstElementChild.dataset.page === String(clickPage)) {
+      page.classList.add('active')
+    } else {
+      page.classList.remove('active')
+    }
   })
 }
 
@@ -104,14 +152,16 @@ searchForm.addEventListener('submit',function onSearchSubmitted(e) {
   const keyword = searchInput.value.trim().toLowerCase()
 
   filteredUser = users.filter (function(user) {
-    if (user.name.toLowerCase().includes(keyword) || user.surname.toLowerCase().includes(keyword)) {
-      return user
-    }
+    const userName = user.name + user.surname
+    return userName.toLowerCase().includes(keyword)
   })
   if (filteredUser.length === 0) {
     return alert(`您輸入的關鍵字：${keyword} 沒有符合條件的搜尋結果`)
   }
-  renderUserList(filteredUser)
+  //search後的結果也要分頁，預設顯示第一頁的搜尋結果
+  renderUserList(getUsersByPage(1))
+  //重新渲染paginator
+  renderPaginator(filteredUser.length)
 })
 
 
