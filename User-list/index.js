@@ -12,22 +12,27 @@ const searchInput = document.querySelector('#search-input')
 const USER_PER_PAGE = 12
 const paginator = document.querySelector('#paginator')
 
+const modeChangeSwitch = document.querySelector('#change-displayMode')
+// 宣告currentPage去紀錄目前分頁，確保切換模式時分頁不會跑掉且搜尋時不會顯示錯誤
+let currentPage = 1
+
 //用axios發送get request
 axios.get(INDEX_URL)
 .then((response) => {
   // console.log(response.data.results)
   users.push(...response.data.results)
   // renderUserList(users)
-  renderUserList(getUsersByPage(1))
+  renderUserList(getUsersByPage(currentPage))
   renderPaginator(users.length)
 })
 .catch ((error) => console.log(error))
 
 //渲染畫面
 function renderUserList(data) {
-  let htmlContent =''
-  data.forEach ( item => {
-    htmlContent += `
+  if (dataPanel.dataset.mode === "card-mode") {
+    let htmlContent = ''
+    data.forEach(item => {
+      htmlContent += `
     <div class="col-sm-2">
         <div class="mb-2">
           <div class="card">
@@ -44,8 +49,28 @@ function renderUserList(data) {
         </div>
       </div>
     `
-    dataPanel.innerHTML = htmlContent
-  })
+      dataPanel.innerHTML = htmlContent
+    })
+  } else if (dataPanel.dataset.mode === "list-mode") {
+    let listHtmlContent = `<ul class="list-group col-sm-12">`
+    data.forEach((item) => {
+      listHtmlContent += `
+      <li class="list-group-item d-flex justify-content-between">
+        <h5 class="card-title">${item.name} ${item.surname}</h5>
+        <div>
+          <button class="btn btn-primary btn-show-movie" 
+            data-bs-toggle="modal"
+            data-bs-target="#user-modal"
+            data-id="${item.id}">More
+        </button>
+          <button class="btn btn-info btn-add-favorite" data-id="${item.id}">+</button>
+        </div>
+      </li>
+      `
+    })
+    listHtmlContent += `</ul>`
+    dataPanel.innerHTML = listHtmlContent
+  }
 }
 
 //渲染分頁數
@@ -76,7 +101,8 @@ function getUsersByPage(page) {
 paginator.addEventListener('click',function onPaginatorClicked(e) {
   if (e.target.tagName !== 'A') return
   const page = Number(e.target.dataset.page)
-  renderUserList(getUsersByPage(page))
+  currentPage = page
+  renderUserList(getUsersByPage(currentPage))
   markCurrentPage(page)
 })
 
@@ -93,23 +119,27 @@ function markCurrentPage(clickPage) {
 }
 
 //對照片點擊時產生對應的modal訊息
-dataPanel.addEventListener('click',onImgClicked)
+dataPanel.addEventListener('click',onPanelClicked)
 
-function onImgClicked (e) {
-  if (e.target.matches('.card-img')) {
+function onPanelClicked (e) {
+  if (e.target.matches('.card-img') || e.target.matches('.btn-show-movie')) {
     // console.log(Number(e.target.dataset.id))
     showUserInfo(Number(e.target.dataset.id))
-  } 
+  }
 }
 function showUserInfo(id) {
   const userModalImg = document.querySelector('#user-modal-image')
   const userModalInfo = document.querySelector('#user-modal-info')
+  userModalImg.innerHTML = ""
+  userModalImg.innerHTML = ""
+  modalAddFav.innerHTML = ""
   axios.get(`${INDEX_URL}/${id}`)
   .then((response) => {
     // console.log(response.data)
-    userModalImg.innerHTML = `
+    if (dataPanel.dataset.mode === 'card-mode') {
+      userModalImg.innerHTML = `
     <img src= "${response.data.avatar}" alt="movie-poster" class="img-fluid">`
-    userModalInfo.innerHTML = `
+      userModalInfo.innerHTML = `
     <p class="modal-name">Name: ${response.data.name} ${response.data.surname}</p>
     <p class="modal-age">Age: ${response.data.age}</p>
     <p class="modal-email">Email: ${response.data.email}</p>
@@ -117,21 +147,36 @@ function showUserInfo(id) {
     <p class="modal-region">Region: ${response.data.region}</p>
     <p class="modal-birthday">Birthday: ${response.data.birthday}</p>
   `
-  modalAddFav.innerHTML = `
+      modalAddFav.innerHTML = `
     <button 
       class="btn btn-info btn-add-favorite"
       data-id=${response.data.id}>+</button>
     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
   `
+    } else if (dataPanel.dataset.mode === 'list-mode') {
+      userModalImg.innerHTML = `
+    <img src= "${response.data.avatar}" alt="movie-poster" class="img-fluid">`
+      userModalInfo.innerHTML = `
+    <p class="modal-name">Name: ${response.data.name} ${response.data.surname}</p>
+    <p class="modal-age">Age: ${response.data.age}</p>
+    <p class="modal-email">Email: ${response.data.email}</p>
+    <p class="modal-gender">Gender: ${response.data.gender}</p>
+    <p class="modal-region">Region: ${response.data.region}</p>
+    <p class="modal-birthday">Birthday: ${response.data.birthday}</p>
+  `
+    }
   })
 }
 
-//對btn-add-favorite按鈕點擊後，將user加入favorite頁面
+
+//card-mode對btn-add-favorite按鈕點擊後，將user加入favorite頁面
 modalAddFav.addEventListener('click', onAddButtonClicked)
+//list-mode對btn-add-favorite點擊時產生對應的modal訊息
+dataPanel.addEventListener('click', onAddButtonClicked)
 
 function onAddButtonClicked(e) {
   if (e.target.matches('.btn-add-favorite')) {
-    // console.log(Number(e.target.dataset.id))
+    console.log(Number(e.target.dataset.id))
     addToFavorite(Number(e.target.dataset.id))
   }
 }
@@ -164,4 +209,18 @@ searchForm.addEventListener('submit',function onSearchSubmitted(e) {
   renderPaginator(filteredUser.length)
 })
 
+//依 data-mode 切換不同的顯示方式
+function changeDisplayMode(mode) {
+  if (dataPanel.dataset.mode === mode) return
+  dataPanel.dataset.mode = mode
+}
 
+//對displayMode點選時，進行mode切換
+modeChangeSwitch.addEventListener('click',function onSwitchClicked(e) {
+  if (e.target.matches('#card-mode-button')) {
+    changeDisplayMode('card-mode')
+    renderUserList(getUsersByPage(currentPage))
+  } else if (e.target.matches('#list-mode-button'))
+    changeDisplayMode('list-mode')
+    renderUserList(getUsersByPage(currentPage))
+})

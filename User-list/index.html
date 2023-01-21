@@ -37,18 +37,18 @@
   <div class="container mt-3">
     <!-- search bar -->
     <div class="row">
-      <form class="row row-cols-lg-auto g-3 align-items-center mb-3" id="search-form">
-        <div class="col-12">
+      <form class="form-inline col-sm-11" id="search-form">
           <label class="visually-hidden" for="search-input">Search keyword</label>
-          <input type="text" class="form-control" id="search-input" placeholder="keyword...">
-        </div>
-        <div class="col-12">
-          <button type="submit" class="btn btn-primary" id="search-submit-button"><i class="fa-solid fa-magnifying-glass"></i>Search</button>
-        </div>
+          <input type="text" class="form-control  mb-2 mr-sm-2" id="search-input" placeholder="keyword...">
+          <button type="submit" class="btn btn-primary mx-2 mb-2" id="search-submit-button"><i class="fa-solid fa-magnifying-glass"></i>Search</button>      
       </form>
+      <div class="col-sm-1" id="change-displayMode">
+        <i class="fa fa-th fa-xl" id="card-mode-button" aria-hidden="true"></i>
+        <i class="fa fa-bars fa-xl" id="list-mode-button" aria-hidden="true"></i>
+      </div>
     </div>
     <!-- data-panel -->
-    <div class="row" id="data-panel">
+    <div class="row" id="data-panel" data-mode="card-mode">
       <!-- JS Render Movie List  -->
     </div>
     <!-- pagination -->

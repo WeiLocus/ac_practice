@@ -122,7 +122,8 @@ function removeFavUser(id) {
   if (removeUser === -1) return
   favUsers.splice(removeUser, 1)
   localStorage.setItem('favoriteUsers', JSON.stringify(favUsers))
-  renderUserList(favUsers)
+  renderUserList(getUsersByPage(1))
+  markCurrentPage(1)
 }
 
 searchForm.addEventListener('submit', function onSearchSubmitted(e) {
@@ -130,11 +131,8 @@ searchForm.addEventListener('submit', function onSearchSubmitted(e) {
   const keyword = searchInput.value.trim().toLowerCase()
   filteredUser = favUsers.filter(function (user) {
     const userName = user.name + user.surname
-    console.log(userName)
-    console.log(userName.toLowerCase().includes(keyword))
     return userName.toLowerCase().includes(keyword)
   })
-  console.log(filteredUser)
   if (filteredUser.length === 0) {
     return alert(`您輸入的關鍵字：${keyword} 沒有符合條件的搜尋結果`)
   }
