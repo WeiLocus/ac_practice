@@ -138,3 +138,37 @@ header {
   visibility: hidden;
   position: absolute;
 }
+
+/* min-width:768px */
+@media (min-width:768px) {
+  .navbar-toggle-label {
+    display: none;
+  }
+  .nav {
+    all: unset;
+  }
+  .nav-item {
+    margin: 0;
+    opacity: 1;
+  }
+  /* header css grid */
+  header {
+    display: grid;
+    /* 分四份 */
+    grid-template-columns: 1fr auto minmax(600px,3fr) 1fr;
+  }
+  .navbar-brand {
+    grid-column: 2 / 3;
+  }
+  .nav {
+    grid-column: 3 / 4;
+  }
+  .nav-list {
+    height: 100%;
+    display: grid;
+    grid-auto-flow: column;
+    justify-content: end;
+    align-items: center;
+    grid-gap: 2rem;
+  }
+}
