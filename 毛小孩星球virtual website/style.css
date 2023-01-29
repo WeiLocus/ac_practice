@@ -46,6 +46,38 @@ a {
   /*拿掉底線*/
 }
 
+/* 共用樣式 */
+.container {
+  width: 85%;
+  margin: 0 auto 3rem auto;
+  ;
+}
+
+/* 按鈕樣式 */
+.action {
+  display: inline-block;
+  color: white;
+  background: #39bae6;
+  border-radius: 0.25rem;
+  font-size: 1rem;
+  padding: 0.25rem 1rem;
+  transition: all 0.1s linear;
+}
+
+.action:hover {
+  background: #267c99;
+  /* 陰影 */
+  -webkit-box-shadow: 0px 1px 5px 0px rgba(87, 87, 87, 1);
+  -moz-box-shadow: 0px 1px 5px 0px rgba(87, 87, 87, 1);
+  box-shadow: 0px 1px 5px 0px rgba(87, 87, 87, 1);
+}
+
+.background-image {
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
 /* Main header */
 header {
   /* 置頂 */
@@ -76,7 +108,8 @@ header {
   background: #ffffff;
   /* 原先不顯示 */
   transform: scale(1, 0);
-  transform-origin: top;  /*從上面展開*/
+  transform-origin: top;
+  /*從上面展開*/
   transition: transform .2s ease-out;
 }
 
@@ -94,6 +127,7 @@ header {
 .navbar-toggle:checked~.nav {
   transform: scale(1, 1);
 }
+
 /* 恢復nav-item樣式 */
 .navbar-toggle:checked~.nav .nav-item {
   opacity: 1;
@@ -110,6 +144,7 @@ header {
   display: flex;
   align-items: center;
 }
+
 /* 用偽元素做出漢堡排上下兩條線 */
 .hamburger,
 .hamburger::before,
@@ -118,25 +153,100 @@ header {
   height: 3px;
   background: #267b98;
 }
+
 .hamburger {
   position: relative;
 }
+
 .hamburger::before,
 .hamburger::after {
   content: '';
   position: absolute;
   left: 0;
 }
+
 .hamburger::before {
-  top: 8px;   /*距離top往下8px*/
+  top: 8px;
+  /*距離top往下8px*/
 }
+
 .hamburger::after {
-  bottom: 8px; /*距離bottom往下8px*/
+  bottom: 8px;
+  /*距離bottom往下8px*/
 }
+
 /* 做出漢堡排icon後隱藏checkbox */
 .navbar-toggle {
   visibility: hidden;
   position: absolute;
+}
+
+/* Activity */
+.banner-wrapper {
+  padding-top: 92px;
+  display: grid;
+  grid-template-columns: repear(4, 1fr);
+  grid-template-rows: repeat(2, 250px);
+  grid-gap: 0.5rem;
+  grid-template-areas: 
+  " main main main main"
+  "left left right right";
+}
+/* 用 grid-area 屬性命名 */
+.main-banner {
+  grid-area: main;
+  background-image: url("https://images.unsplash.com/photo-1520087619250-584c0cbd35e8?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1285&q=80");
+}
+.sub-banner-left {
+  grid-area: left;
+  background-image: url("https://images.unsplash.com/photo-1569809317138-8d2ff6060c4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2250&q=80");
+}
+.sub-banner-right {
+  grid-area: right;
+  background-image: url("https://images.unsplash.com/photo-1535294435445-d7249524ef2e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2250&q=80");
+}
+
+/* banner內部排版 */
+.main-banner,
+.sub-banner {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-end;
+  padding: 1rem;
+  -webkit-box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, 0.08);
+  -moz-box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, 0.08);
+  box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, 0.08);
+}
+/* banner內部文字樣式調整 */
+.banner-title {
+  margin-bottom: 0.4rem;
+}
+.main-banner .banner-title {
+  font-size: 2rem;
+  color: #1a5366
+}
+
+.banner-description {
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.main-banner .banner-description {
+  color: #267b98;
+}
+
+.sub-banner .action {
+  font-size: 1rem;
+  padding: 0.25rem 1rem;
+}
+
+.sub-banner .banner-title,
+.sub-banner .banner-description {
+  color: #fff;
+  font-size: 1.2rem;
+  font-weight: 400;
+  letter-spacing: 1px;
 }
 
 /* min-width:768px */
@@ -144,25 +254,31 @@ header {
   .navbar-toggle-label {
     display: none;
   }
+
   .nav {
     all: unset;
   }
+
   .nav-item {
     margin: 0;
     opacity: 1;
   }
+
   /* header css grid */
   header {
     display: grid;
     /* 分四份 */
-    grid-template-columns: 1fr auto minmax(600px,3fr) 1fr;
+    grid-template-columns: 1fr auto minmax(600px, 3fr) 1fr;
   }
+
   .navbar-brand {
     grid-column: 2 / 3;
   }
+
   .nav {
     grid-column: 3 / 4;
   }
+
   .nav-list {
     height: 100%;
     display: grid;
@@ -170,5 +286,37 @@ header {
     justify-content: end;
     align-items: center;
     grid-gap: 2rem;
+  }
+
+  /* action */
+  .action {
+    font-size: 1.2rem;
+    padding: 0.75rem 2rem;
+  }
+    /* Activity */
+    .banner-wrapper {
+      padding-top: 92px;
+      display: grid;
+      grid-template-columns: repear(4, 1fr);
+      grid-template-rows: repeat(2, 250px);
+      grid-gap: 1.5rem;
+      grid-template-areas:
+        "main main main left"
+        "main main main right";
+  }
+  .main-banner {
+    justify-content: center;
+    align-items: flex-start;
+  }
+  /* banner內部文字樣式調整 */
+  .main-banner .banner-title {
+    font-size: 4rem;
+  }
+  .main-banner .banner-description,
+  .sub-banner .banner-title {
+    font-size: 2rem;
+  }
+  .sub-banner .action {
+    font-size: 1.2rem;
   }
 }
