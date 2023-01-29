@@ -1,0 +1,140 @@
+@import url("https://fonts.googleapis.com/css?family=Noto+Sans+TC:400,700&display=swap&subset=chinese-traditional");
+
+/* reset CSS */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.4;
+  background-color: #f6f7f8;
+  font-family: 'Noto Sans TC', sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+  margin: 0;
+  line-height: 0.9;
+}
+
+p {
+  margin: 0;
+}
+
+ul,
+li {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+a {
+  text-decoration: none;
+  /*拿掉底線*/
+}
+
+/* Main header */
+header {
+  /* 置頂 */
+  position: fixed;
+  z-index: 999;
+  width: 100%;
+  height: 60px;
+  text-align: center;
+  background: #ffffff;
+  /* 陰影 */
+  -webkit-box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.1);
+  -moz-box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-brand {
+  /*與外層 Header 高度相同達到垂直置中*/
+  line-height: 60px;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #267b98
+}
+
+.nav {
+  position: absolute;
+  top: 100%;
+  width: 100%;
+  background: #ffffff;
+  /* 原先不顯示 */
+  transform: scale(1, 0);
+  transform-origin: top;  /*從上面展開*/
+  transition: transform .2s ease-out;
+}
+
+.nav-item {
+  margin: 1.4rem 0;
+  /* 不顯示，避免導覽項目的文字在導覽列開關時被壓縮 */
+  opacity: 0;
+}
+
+.nav-link {
+  color: #267b98
+}
+
+/* pseudo-class 控制「被勾選」時的樣式 */
+.navbar-toggle:checked~.nav {
+  transform: scale(1, 1);
+}
+/* 恢復nav-item樣式 */
+.navbar-toggle:checked~.nav .nav-item {
+  opacity: 1;
+  transition: opacity .2s ease-out .15s;
+}
+
+.navbar-toggle-label {
+  position: absolute;
+  /* 元素的高度會和父元素header相等 */
+  top: 0;
+  bottom: 0;
+  right: 7.5%;
+  /* display */
+  display: flex;
+  align-items: center;
+}
+/* 用偽元素做出漢堡排上下兩條線 */
+.hamburger,
+.hamburger::before,
+.hamburger::after {
+  width: 30px;
+  height: 3px;
+  background: #267b98;
+}
+.hamburger {
+  position: relative;
+}
+.hamburger::before,
+.hamburger::after {
+  content: '';
+  position: absolute;
+  left: 0;
+}
+.hamburger::before {
+  top: 8px;   /*距離top往下8px*/
+}
+.hamburger::after {
+  bottom: 8px; /*距離bottom往下8px*/
+}
+/* 做出漢堡排icon後隱藏checkbox */
+.navbar-toggle {
+  visibility: hidden;
+  position: absolute;
+}
