@@ -13,6 +13,9 @@ body {
   height: 100%;
 }
 
+html {
+  scroll-behavior: smooth;
+}
 body {
   margin: 0;
   font-size: 1rem;
@@ -126,12 +129,14 @@ header {
 /* pseudo-class 控制「被勾選」時的樣式 */
 .navbar-toggle:checked~.nav {
   transform: scale(1, 1);
+  background-color: rgba(255, 255, 255, 0.9);
 }
 
 /* 恢復nav-item樣式 */
 .navbar-toggle:checked~.nav .nav-item {
   opacity: 1;
   transition: opacity .2s ease-out .15s;
+
 }
 
 .navbar-toggle-label {
@@ -337,6 +342,46 @@ header {
   transform: scale(1, 1.05);
 }
 
+/* Adoption */
+.adoption-wrapper {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto 135px;
+  width: 100%;
+  background: #FFFFFF;
+}
+.adoption-image {
+  width: 100%;
+}
+/* css grid 排版 */
+.adoption-info {
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  padding: 1.2rem;
+}
+
+/* 調整adoption內部文字樣式 */
+.adoption-info .title {
+  font-size: 1.75rem;
+  margin-bottom: 0.4rem;
+  color: #267c99;
+}
+.adoption-info .description {
+  font-size: 1rem;
+  margin-bottom: 0.9rem;
+  color: #5e5c5c;
+}
+
+/* footer */
+footer {
+  width: 100%;
+  padding: 1rem;
+  background: #4a4a4a;
+  color: white;
+  text-align: center;
+  letter-spacing: 2px;
+}
 /* min-width:768px */
 @media (min-width:768px) {
   .navbar-toggle-label {
@@ -411,5 +456,26 @@ header {
 
   .sub-banner .action {
     font-size: 1.2rem;
+  }
+  /* adoption */
+  .adoption-wrapper {
+    grid-template-columns: repeat(2,1fr);
+    grid-template-rows: auto;
+    grid-gap: 2rem;
+  }
+  .adoption-info {
+    justify-items: start;
+  }
+  .adoption-info .title {
+    font-size: 3rem;
+  }
+  .adoption-info .description {
+    font-size: 1.875rem;
+  }
+}
+
+@media (min-width:992px) {
+  .album-wrapper {
+    grid-template-columns: repeat(4, 1fr);
   }
 }
